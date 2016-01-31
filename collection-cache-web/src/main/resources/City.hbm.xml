@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.test.entity">
+	<class name="City" table="city">
+		<cache usage="transactional" include="all" region="city-cache" />
+		<id name="id" column="ID">
+			<generator class="native" />
+		</id>
+		<property name="name" type="string" column="Name"></property>
+		<many-to-one name="country" column="CountryCode" lazy="false" class="Country" fetch="select"></many-to-one>
+		<property name="district" type="string" column="District"></property>
+		<property name="population" type="integer" column="Population"></property>
+	</class>
+</hibernate-mapping>

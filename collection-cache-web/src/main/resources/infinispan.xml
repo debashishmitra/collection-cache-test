@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:infinispan xmlns:tns="urn:infinispan:config:6.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:infinispan:config:6.0 http://docs.jboss.org/infinispan/schemas/infinispan-config-6.0.xsd ">
+	<tns:global>
+		<tns:globalJmxStatistics enabled="true"></tns:globalJmxStatistics>
+<!-- 		<tns:transport clusterName="distributed-cache-cluster" strictPeerToPeer="true" distributedSyncTimeout="240000" nodeName="Node A"> -->
+		<tns:transport clusterName="distributed-cache-cluster" strictPeerToPeer="true" distributedSyncTimeout="240000">
+			<tns:properties>
+				<tns:property name="configurationFile" value="jgroups-tcp.xml" />
+			</tns:properties>
+		</tns:transport>
+	</tns:global>
+
+	<tns:default>
+		<tns:expiration lifespan="-1" wakeUpInterval="-1" maxIdle="-1" />
+		<tns:clustering mode="local">
+			<tns:sync />
+			<tns:hash numOwners="2"></tns:hash>
+		</tns:clustering>
+	</tns:default>
+	
+	<tns:namedCache name="timestamp-cache">
+		<tns:expiration lifespan="-1" wakeUpInterval="-1" maxIdle="-1" />
+	</tns:namedCache>
+<!-- 	<tns:namedCache name="product-type-cache"> -->
+<!-- 		<tns:eviction threadPolicy="DEFAULT" strategy="LIRS" maxEntries="100000" /> -->
+<!-- 	</tns:namedCache> -->
+<!-- 	<tns:namedCache name="product-type-department-cache"> -->
+<!-- 		<tns:eviction threadPolicy="DEFAULT" strategy="LIRS" maxEntries="100000" /> -->
+<!-- 	</tns:namedCache> -->
+<!-- 	<tns:namedCache name="brand-cache"> -->
+<!-- 		<tns:eviction threadPolicy="DEFAULT" strategy="LIRS" maxEntries="100000" /> -->
+<!-- 	</tns:namedCache> -->
+<!-- 	<tns:namedCache name="query-cache"> -->
+<!-- 		<tns:eviction threadPolicy="DEFAULT" strategy="LIRS" maxEntries="100000" /> -->
+<!-- 	</tns:namedCache> -->
+<!-- 	<tns:namedCache name="product-type-department-collection-cache"> -->
+<!-- 		<tns:eviction threadPolicy="DEFAULT" strategy="LIRS" maxEntries="100000" /> -->
+<!-- 	</tns:namedCache> -->
+
+	<!-- The below settings are after disabling eviction since there is a suspicion that expiration/eviction may be the cause for collection caches being undesirably cleared between requests -->
+	<tns:namedCache name="country-cache">
+		<tns:eviction threadPolicy="DEFAULT" maxEntries="-1" />
+	</tns:namedCache>
+	<tns:namedCache name="city-cache">
+		<tns:eviction threadPolicy="DEFAULT" maxEntries="-1" />
+	</tns:namedCache>
+	<tns:namedCache name="query-cache">
+		<tns:eviction threadPolicy="DEFAULT" maxEntries="-1" />
+	</tns:namedCache>
+	<tns:namedCache name="cities-collection-cache">
+		<tns:eviction threadPolicy="DEFAULT" maxEntries="-1" />
+	</tns:namedCache>
+</tns:infinispan>

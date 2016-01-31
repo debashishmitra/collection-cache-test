@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
+     	http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
+     	http://www.springframework.org/schema/jee	
+     	http://www.springframework.org/schema/jee/spring-jee-4.1.xsd
+     	http://www.springframework.org/schema/tx 
+ 		http://www.springframework.org/schema/tx/spring-tx-4.1.xsd 
+ 		http://www.springframework.org/schema/mvc 
+ 		http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
+
+	<context:component-scan base-package="com.test" />
+	<context:annotation-config />
+
+	<jee:jndi-lookup id="mySqlDataSource" jndi-name="java:/jdbc/mySql" />
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="mySqlDataSource" />
+		<property name="mappingResources">
+			<list>
+				<value>City.hbm.xml</value>
+				<value>Country.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.generate_statistics">true</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.use_sql_comments">true</prop>
+				<prop key="hibernate.default_schema">world</prop>
+				<!-- Infinispan -->
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.infinispan.InfinispanRegionFactory</prop>
+				<prop key="hibernate.cache.infinispan.cfg">infinispan.xml</prop>
+				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</prop>
+<!-- 				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.CMTTransactionFactory</prop> -->
+				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</prop>
+				<prop key="hibernate.connection.release_mode">on_close</prop>
+				<prop key="hibernate.generate_statistics">true</prop>
+				<prop key="hibernate.cache.use_structured_entries">true</prop>
+				<prop key="hibernate.cache.infinispan.com.test.Country.cfg">country-cache</prop>
+				<prop key="hibernate.cache.infinispan.com.test.City.cfg">city-cache</prop>
+				<prop key="hibernate.cache.infinispan.com.test.Country.cities.cfg">cities-collection-cache</prop>
+				<prop key="hibernate.cache.infinispan.query.cfg">query-cache</prop>
+				<prop key="hibernate.cache.infinispan.timestamps.cfg">timestamp-cache</prop>
+
+				<!-- Making sure the caches do not expire -->
+				<prop key="hibernate.cache.infinispan.org.hibernate.cache.spi.UpdateTimestampsCache.expiration.lifespan">-1</prop>
+				<prop key="hibernate.cache.infinispan.org.hibernate.cache.spi.UpdateTimestampsCache.expiration.max_idle">-1</prop>
+				<prop key="hibernate.cache.infinispan.com.test.Country.cities.expiration.lifespan">-1</prop>
+				<prop key="hibernate.cache.infinispan.com.test.Country.cities.expiration.max_idle">-1</prop>
+				<!-- Infinispan -->
+			</props>
+		</property>
+	</bean>
+<!-- 	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"> -->
+<!-- 		<property name="sessionFactory" ref="sessionFactory" /> -->
+<!-- 	</bean> -->
+	
+	<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager"></bean>
+	<tx:annotation-driven />
+</beans>

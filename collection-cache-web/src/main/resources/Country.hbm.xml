@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.test.entity">
+	
+	<class name="Country" table="country">
+		<cache usage="transactional" include="all" region="country-cache" />
+		<id name="code" column="Code">
+			<generator class="native" />
+		</id>
+		<property name="name" type="string" column="Name"></property>
+		<property name="continent" type="string" column="Continent"></property>
+		<property name="region" type="string" column="Region"></property>
+		<property name="surfaceArea" type="float" column="SurfaceArea"></property>
+		<property name="independenceYear" type="integer" column="IndepYear"></property>
+		<property name="population" type="integer" column="Population"></property>
+		<set name="cities" table="city" lazy="false">
+			<cache usage="transactional" include="all" region="cities-collection-cache" />
+			<key column="CountryCode" />
+			<one-to-many class="City"></one-to-many>
+		</set>
+
+		<!-- <one-to-one name="capital" class="City" lazy="false" foreign-key="Capital" /> -->
+	</class>
+</hibernate-mapping>
